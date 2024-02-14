@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Department and Manager Filter</title>
+    <style>
+        /* Add your CSS styling here */
+    </style>
+</head>
+<body>
+
+<form action="" method="post" id="departmentForm">
+    <label for="department">Select Department:</label>
+    <select name="department" id="department" onchange="getManagers()">
+        <option value="IT">IT</option>
+        <option value="HR">HR</option>
+        <!-- Add more department options as needed -->
+    </select>
+
+    <label for="manager">Select Manager:</label>
+    <select name="manager" id="manager">
+        <!-- Managers will be populated dynamically using JavaScript -->
+    </select>
+
+    <input type="submit" value="Submit">
+</form>
+
+<script>
+    function getManagers() {
+        var selectedDepartment = document.getElementById("department").value;
+        var managerSelect = document.getElementById("manager");
+
+        // Use AJAX to fetch managers based on the selected department
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                // Parse the JSON response
+                var managers = JSON.parse(xhr.responseText);
+
+                // Clear previous options
+                managerSelect.innerHTML = "";
+
+                // Populate manager options
+                managers.forEach(function (manager) {
+                    var option = document.createElement("option");
+                    option.value = manager;
+                    option.text = manager;
+                    managerSelect.add(option);
+                });
+            }
+        };
+
+        // Send a GET request to the server to get managers for the selected department
+        xhr.open("GET", "get_managers.php?department=" + selectedDepartment, true);
+        xhr.send();
+    }
+</script>
+
+
+
+</body>
+</html>
